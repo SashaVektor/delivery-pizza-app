@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { PizzaItem, User } from '../types/typings'
+import { PizzaItem } from '../types/typings'
 import Button from './Button'
 import Modal from './Modal'
 import PizzaPopup from './PizzaPopup'
