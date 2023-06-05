@@ -61,11 +61,11 @@ export const googleUserSignIn = expressAsyncHandler(async (req, res) => {
 
         if (person) {
             res.send({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                isAdmin: user.isAdmin,
-                token: generateToken(user)
+                _id: person._id,
+                name: person.name,
+                email: person.email,
+                isAdmin: person.isAdmin,
+                token: generateToken(person)
             })
             return
         }
