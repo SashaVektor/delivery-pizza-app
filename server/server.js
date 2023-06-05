@@ -73,17 +73,12 @@ app.post('/create-payment-intent', async (req, res) => {
     }
 });
 
-const staticPath = path.join(__dirname, "../client/build");
+const __dirname = path.resolve();
 
-app.use(express.static(staticPath));
+app.use(express.static(path.join(__dirname, "/client/dist")));
 
-app.get("*", function(_, res) {
-  res.sendFile("index.html", { root: staticPath }, function(err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
-});
+app.get("*", (req, res) => 
+res.sendFile(path.join(__dirname, "/client/dist/index.html")));
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
