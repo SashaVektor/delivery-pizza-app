@@ -6,6 +6,7 @@ import userRoute from "./routes/userRoute.js"
 import orderRoute from "./routes/orderRoute.js"
 import cors from "cors"
 import uploadRouter from "./routes/uploadRouter.js";
+import path from "path"
 
 import Stripe from 'stripe';
 
@@ -71,6 +72,19 @@ app.post('/create-payment-intent', async (req, res) => {
         res.status(err.statusCode || 500).json(err.message);
     }
 });
+
+app.use(express.static(path.join(__dirname, "./client/build")))
+
+app.get("*", function(_, res) {
+    res.sendFile(
+        path.join(__dirname, "./client/build/index.html"),
+        function(err) {
+            if(err) {
+                res.status(500).send(err)
+            }
+        }
+    )
+})
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
