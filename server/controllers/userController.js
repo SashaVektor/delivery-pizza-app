@@ -60,7 +60,13 @@ export const googleUserSignIn = expressAsyncHandler(async (req, res) => {
         const person = await User.findOne({ email: req.body.email })
 
         if (person) {
-            res.status(201).send({ message: `${req.body.email} вход успешен` })
+            res.send({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin,
+                token: generateToken(user)
+            })
             return
         }
 
@@ -82,7 +88,7 @@ export const googleUserSignIn = expressAsyncHandler(async (req, res) => {
             isAdmin: user.isAdmin,
             token: generateToken(user)
         })
-        
+
     } catch (err) {
         res.status(401).send({ message: err.message })
     }
