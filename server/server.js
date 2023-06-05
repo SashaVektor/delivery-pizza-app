@@ -8,7 +8,7 @@ import cors from "cors"
 import uploadRouter from "./routes/uploadRouter.js";
 
 import Stripe from 'stripe';
-import { updateOrderPayment } from "./controllers/orderController.js";
+
 
 dotenv.config();
 mongoose.connect(process.env.MONGODB_URL)
