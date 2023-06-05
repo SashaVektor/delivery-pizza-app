@@ -4,7 +4,7 @@ import Input from "./Input"
 import Button from "./Button"
 import { GoogleLogin } from '@react-oauth/google';
 import { createUser } from "../utils";
-import { addUser, registerUser, userLogin } from "../store/slices/authSlice";
+import { registerUser, userLogin } from "../store/slices/authSlice";
 import { toast } from 'react-hot-toast/headless';
 import { RootState, useAppDispatch, useAppSelector } from '../store/store';
 import { googleUserLogin } from '../store/slices/authSlice';
@@ -129,7 +129,6 @@ const AuthModal: FC<AuthModalProps> = ({ setIsOpen }) => {
                 onSuccess={async (credentialResponse) => {
                     const user = await createUser(credentialResponse)
                     await dispatch(googleUserLogin(user))
-                    dispatch(addUser(user))
                     setIsOpen(false)
                 }}
                 onError={() => {

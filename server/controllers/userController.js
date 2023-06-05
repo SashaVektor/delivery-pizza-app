@@ -82,6 +82,7 @@ export const googleUserSignIn = expressAsyncHandler(async (req, res) => {
             isAdmin: user.isAdmin,
             token: generateToken(user)
         })
+        
     } catch (err) {
         res.status(401).send({ message: err.message })
     }

@@ -56,10 +56,6 @@ const authSlice = createSlice({
     name: "authSlice",
     initialState,
     reducers: {
-        addUser: (state, action) => {
-            state.googleUser = action.payload
-            localStorage.setItem("user", JSON.stringify(action.payload))
-        },
         removeUser: (state) => {
             state.googleUser = null
             localStorage.removeItem("user")
@@ -84,9 +80,18 @@ const authSlice = createSlice({
             state.googleUser = null
             state.error = action.error
         })
+        builder.addCase(googleUserLogin.fulfilled, (state, action) => {
+            state.googleUser = action.payload?.data
+            state.error = null
+            localStorage.setItem("user", JSON.stringify(action.payload?.data))
+        })
+        builder.addCase(googleUserLogin.rejected, (state, action) => {
+            state.googleUser = null
+            state.error = action.error
+        })
     },
 })
 
-export const { addUser, removeUser } = authSlice.actions
+export const { removeUser } = authSlice.actions
 
 export default authSlice.reducer
