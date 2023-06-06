@@ -1,18 +1,22 @@
 import InfoCard from "../../components/adminComponents/InfoCard"
 import { useGetAllUsersQuery, useGetOrdersQuery, useGetProductsQuery } from "../../store/services/products"
 import { additionalProducts } from "../../helpers/constants/additionalProducts"
+import Spinner from "../../components/Spinner"
 
 
 const AdminPageInfo = () => {
-  const { data: products } = useGetProductsQuery()
-  const { data: orders } = useGetOrdersQuery();
-  const { data: users } = useGetAllUsersQuery();
+  const { data: products, isLoading: productLoading } = useGetProductsQuery()
+  const { data: orders, isLoading: ordersLoading } = useGetOrdersQuery();
+  const { data: users, isLoading: usersLoading } = useGetAllUsersQuery();
+
 
   const deliveredOrders = orders?.filter((order) => order.status === "delivered");
 
   const paidOrders = orders?.filter((order) => order.payStatus === "Оплачено")
 
   const totalEarnings = paidOrders?.reduce((acc, item) => acc + item.totalPrice, 0)
+
+  if(productLoading || usersLoading || ordersLoading) return <Spinner />
 
   return (
     <div>

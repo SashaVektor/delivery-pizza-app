@@ -6,6 +6,7 @@ export interface PizzaItem {
     descr: string
     category: string
     info: string
+    discount: number
     additiveItems?: AdditionalProduct[]
     additiveItemsInfo?: string
 }

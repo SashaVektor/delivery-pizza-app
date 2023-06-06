@@ -69,11 +69,18 @@ const UserPage = () => {
                         Мои заказы
                     </h2>
                     {userOrders.length ? (
-                        <div className="flex flex-wrap gap-5">
-                            {currentOrders.map((order: UserOrder) => (
-                                <UserOrderCard key={order._id} order={order} />
-                            ))}
-                        </div>
+                        <>
+                            <div className="flex flex-wrap gap-5">
+                                {currentOrders.map((order: UserOrder) => (
+                                    <UserOrderCard key={order._id} order={order} />
+                                ))}
+                            </div>
+                            <PaginationsButtons
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                totalPages={totalPages}
+                            />
+                        </>
                     ) : (
                         <div>
                             <h6 className="text-red-500 text-lg mb-5">
@@ -87,11 +94,6 @@ const UserPage = () => {
                             />
                         </div>
                     )}
-                    <PaginationsButtons
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        totalPages={totalPages}
-                    />
                 </div>
                 <Button
                     bgColor="bg-gray-400"

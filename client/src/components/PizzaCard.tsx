@@ -17,6 +17,7 @@ interface PizzaCardProps {
 const PizzaCard: FC<PizzaCardProps> = ({ pizza, isAdminCard }) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const user = useAppSelector((state: RootState) => state.auth.googleUser)
+    
 
     const removeItem = async (id: string, token: string) => {
         if (window.confirm("Вы действительно хотите удалить продукт?")) {
@@ -30,6 +31,9 @@ const PizzaCard: FC<PizzaCardProps> = ({ pizza, isAdminCard }) => {
         }
     }
 
+    const priceWithDiscont = Math.round(pizza.price - (pizza.price * (pizza.discount / 100)))
+    
+
     return (
         <>
             <Modal
@@ -42,7 +46,12 @@ const PizzaCard: FC<PizzaCardProps> = ({ pizza, isAdminCard }) => {
                     setIsOpen={setIsModalOpen}
                 />
             </Modal>
-            <div className='bg-white shadow-md p-3 w-56 sm:w-72 rounded-md flex flex-col '>
+            <div className='bg-white shadow-md p-3 w-56 sm:w-72 rounded-md flex flex-col relative'>
+                {pizza.discount ? <div className='px-2 py-1 bg-red-500 absolute top-0 left-0 rounded-md'>
+                    <p className='text-xs sm:text-base'>
+                        Скидка {pizza.discount} %
+                    </p>
+                </div>: ""}
                 <div className='flex-1'>
                     <div className='w-48 h-48 sm:w-64 sm:h-64 mb-2 mx-auto'>
                         <img src={pizza.image} alt={pizza.name}
@@ -57,8 +66,8 @@ const PizzaCard: FC<PizzaCardProps> = ({ pizza, isAdminCard }) => {
                     </p>
                 </div>
                 <div className='flex justify-between items-center justify-self-end'>
-                    <p className='font-bold text-black text-base sm:text-lg'>
-                        от {pizza.price} грн.
+                    <p className={`font-bold ${pizza.discount > 0 ? "text-red-500" : "text-black"} text-base sm:text-lg`}>
+                        от {pizza.discount ? priceWithDiscont : pizza.price} грн.
                     </p>
                     {!isAdminCard ? <Button
                         bgColor='bg-yellow'

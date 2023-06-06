@@ -12,6 +12,7 @@ const CreateProduct = () => {
   const navigate = useNavigate()
   const [name, setName] = useState<string>("")
   const [price, setPrice] = useState<string>("")
+  const [discount, setDiscount] = useState<number>(0)
   const [pizzaWeight, setPizzaWeight] = useState<string>("")
   const [pizzaSize, setPizzaSize] = useState<string>("")
   const [pizzaDought, setPizzaDought] = useState<"традиционное" | "тонкое">("традиционное")
@@ -21,7 +22,8 @@ const CreateProduct = () => {
   const user = useAppSelector((state: RootState) => state.auth.googleUser)
 
   const token = user?.token ? user.token : ""
-  const validForm = name && price && pizzaSize && pizzaWeight && descr && image;
+  const validDiscount = discount >= 0 && discount < 100
+  const validForm = name && price && pizzaSize && pizzaWeight && descr && image && discount && validDiscount;
 
   const uploadHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
@@ -50,7 +52,8 @@ const CreateProduct = () => {
       descr,
       price: Number(price),
       category: "pizza",
-      info: `${pizzaSize},${pizzaDought},${pizzaWeight}`
+      info: `${pizzaSize},${pizzaDought},${pizzaWeight}`,
+      discount
     }
 
     try {
@@ -60,7 +63,7 @@ const CreateProduct = () => {
       setPizzaWeight(""); setPrice("")
       setTimeout(() => {
         navigate("/admin/all-products")
-      } , 1000)
+      }, 1000)
     } catch (err) {
       toast.error("Что-то пошло не так!")
     }
@@ -90,17 +93,30 @@ const CreateProduct = () => {
               className="w-full"
             />
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-4 pb-2 border-b border-gray-400">
-            <p className="text-gray-300 text-sm md:text-lg whitespace-nowrap">
-              Цена пиццы
+          <div className="pb-2 border-b border-gray-400">
+            <p className="text-gray-300 text-sm md:text-lg sm:whitespace-nowrap mb-2">
+              Цена пиццы / скидка на пиццу %
             </p>
-            <Input
-              input={price}
-              setInput={setPrice}
-              placeholder="Введите цену пиццы, грн."
-              type="text"
-              className="w-full"
-            />
+            <div className="flex gap-2">
+              <Input
+                input={price}
+                setInput={setPrice}
+                placeholder="Введите цену пиццы, грн."
+                type="text"
+                className="w-1/2"
+              />
+              <input
+                type="numer"
+                value={discount}
+                onChange={(e) => setDiscount(Number(e.target.value))}
+                placeholder="Введите скидку, %"
+                className="w-1/2 h-[40px] outline-none rounded-md border border-gray-400 px-4 py-2"
+                
+              />
+            </div>
+            {!validDiscount ? <p className="text-xs text-red-500 text-center">
+              Скидка должна быть в границах от 0 до 99
+            </p>: ""}
           </div>
           <div className="pb-2 border-b border-gray-400">
             <p className="text-gray-300 text-sm md:text-lg sm:whitespace-nowrap mb-2">
@@ -115,7 +131,7 @@ const CreateProduct = () => {
                 className="w-full"
               />
               <select className="w-full border border-gray-400 rounded-lg outline-none focus:outline-none px-2 py-1"
-              onChange={(e) => handeChange(e)}>
+                onChange={(e) => handeChange(e)}>
                 <option value="традиционное">
                   традиционное
                 </option>

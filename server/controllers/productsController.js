@@ -15,6 +15,7 @@ export const createProduct = async (req, res) => {
         descr: product.descr,
         price: product.price,
         info: product.info,
+        discount: product.discount
     })
     const prod = await newProduct.save();
     res.send({ message: 'Product created', prod })
