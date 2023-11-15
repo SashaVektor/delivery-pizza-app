@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom"
-import adminLogo from "../../assets/admin-logo.png"
 import { CiPizza } from "react-icons/ci"
 import { MdExitToApp } from "react-icons/md"
 import AdminLink from "./AdminLink"
@@ -14,7 +13,8 @@ const Sidebar = () => {
         <Link to="/admin"
           className="block w-[150px] h-[80px]"
         >
-          <img src={adminLogo}
+          <img 
+          src="https://res.cloudinary.com/dxvrhfhtl/image/upload/v1700058258/tudgrlzorlz6pjztf77o.png"
             alt="admin logo"
             className="w-full h-full"
           />
