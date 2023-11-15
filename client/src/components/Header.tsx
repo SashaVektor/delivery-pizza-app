@@ -30,10 +30,10 @@ const Header = () => {
         <AuthModal />
       </Modal>
       <BasketModal />
-      <header className="fixed w-full shadow-sm bg-white z-40">
-        <div className="max-w-7xl mx-auto p-2 relative">
+      <header className="fixed w-full drop-shadow-sm bg-white z-40 border-t sm:border-0 border-gray-300">
+        <div className="max-w-7xl mx-auto p-2 px-4 relative">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/" className="block w-10 h-10 sm:w-14 sm:h-14 hover:rotate-[360deg] transition duration-300">
                 <img
                   src="https://res.cloudinary.com/dxvrhfhtl/image/upload/v1698851907/jm8xyhersfvf6z4oczlc.png"
@@ -85,7 +85,7 @@ const Header = () => {
               {!user ? <button
                 className="sm:text-gray-400 sm:transition sm:hover:bg-gray-50 sm:px-2 sm:py-1 sm:rounded-lg"
                 onClick={() => dispatch(setIsAuthModalOpen())}>
-                <BiExit className="block sm:hidden text-black" size={24} />
+                <BiExit className="block sm:hidden text-black" size={26} />
                 <p className="hidden sm:block">
                   Вхід
                 </p>
@@ -96,7 +96,7 @@ const Header = () => {
                 <p className="hidden sm:block">
                   Мій кабінет
                 </p>
-                <BiUser className="block sm:hidden text-black" size={24} />
+                <BiUser className="block sm:hidden text-black" size={26} />
               </button>
               }
               {!path && <>
@@ -116,7 +116,7 @@ const Header = () => {
                   <div className="absolute -right-1 -top-2 rounded-full w-4 h-4 bg-yellow flex items-center justify-center">
                     <p className="text-xs leading-3 text-white">{basketItems.length}</p>
                   </div>
-                  <SlBasket className="block sm:hidden text-black" size={24} />
+                  <SlBasket className="block sm:hidden text-black" size={26} />
                 </button>
               </>}
             </div>

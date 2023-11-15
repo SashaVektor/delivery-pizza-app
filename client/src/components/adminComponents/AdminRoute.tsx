@@ -14,7 +14,7 @@ const AdminRoute: FC<AdminRouteProps> = ({children}) => {
     } 
 
     return (
-        <section className='h-[80vh] pt-[140px]'>
+        <section className='h-[80dvh] pt-[140px]'>
             <div className='max-w-7xl px-4 mx-auto'>
                 <h2 className='text-3xl text-red-500 font-bold'>Permisson Denied.</h2>
                 <p className='text-2xl text-black font-medium'>This page can only view by an Admin user.</p>

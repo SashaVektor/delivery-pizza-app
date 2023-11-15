@@ -15,7 +15,7 @@ const AdminPageInfo = () => {
 
   const isLoading = productLoading || usersLoading || ordersLoading;
 
-  const deliveredOrders = orders?.filter((order) => order.status === "delivered");
+  const deliveredOrders = orders?.filter((order) => order.status === "Доставлено");
 
   const paidOrders = orders?.filter((order) => order.payStatus === "Оплачено")
 

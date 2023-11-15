@@ -22,7 +22,7 @@ const SuccessPage = () => {
     }, [navigate])
 
     return (
-        <div className="flex flex-col h-[80vh] items-center justify-center max-w-4xl mx-auto w-full">
+        <div className="flex flex-col h-[80dvh] items-center justify-center max-w-4xl mx-auto w-full">
             <Confetti
                 drawShape={ctx => {
                     ctx.beginPath()
@@ -35,7 +35,7 @@ const SuccessPage = () => {
                     ctx.stroke()
                     ctx.closePath()
                 }}
-                className="max-w-4xl mx-auto h-[80vh]"
+                className="max-w-4xl mx-auto h-[80dvh]"
             />
             <div className="flex flex-col gap-5 items-center text-center">
                 <h2 className="text-yellow text-4xl font-bold">

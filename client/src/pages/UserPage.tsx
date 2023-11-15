@@ -48,7 +48,7 @@ const UserPage = () => {
     }, [navigate, user, dispatch])
 
     return (
-        <div className="pt-[70px] sm:pt-[90px] max-w-7xl mx-auto w-full min-h-[70vh] px-4 mb-5">
+        <div className="pt-[70px] sm:pt-[90px] max-w-7xl mx-auto w-full min-h-[70dvh] px-4 mb-5">
             <div className="flex items-center gap-3 mb-5">
                 <Button
                     bgColor="bg-yellow"

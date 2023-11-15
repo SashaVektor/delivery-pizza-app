@@ -40,7 +40,7 @@ const SuccessPaymentPage = () => {
 
     }, [dispatch, navigate, paidOrder, user])
     return (
-        <div className='flex flex-col gap-2 items-center justify-center h-screen w-full'>
+        <div className='flex flex-col gap-2 items-center justify-center h-[100dvh] w-full'>
             <h2 className='text-xl md:text-2xl lg:text-3xl text-center text-green-400'>
                 {paidOrder?.userInfo.name}, вітаємо, оплата пройшла успішно!
             </h2>

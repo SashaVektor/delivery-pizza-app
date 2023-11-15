@@ -1,4 +1,3 @@
-import { FC, SetStateAction, Dispatch } from 'react'
 import { IoIosArrowBack } from 'react-icons/io'
 import EditProductForm from './EditProductForm'
 import { RootState, useAppDispatch, useAppSelector } from '../../store/store'
@@ -18,7 +17,7 @@ const EditProductModal = () => {
 
     return <div
         onClick={handleModalClick}
-        className={`${isVisible ? "right-0" : "-right-[150%]"} h-[100vh] duration-300 fixed top-0 w-[100vw] flex justify-end bg-black/50 z-[45] overflow-y-auto overflow-x-hidden`}
+        className={`${isVisible ? "right-0" : "-right-[150%]"} h-[100dvh] duration-300 fixed top-0 w-[100dvw] flex justify-end bg-black/50 z-[45] overflow-y-auto overflow-x-hidden`}
     >
         <div className='flex flex-col bg-white pt-2 sm:pt-4 relative max-w-[90dvw] sm:max-w-2xl h-[100dvh] overflow-y-auto overflow-x-hidden scrollbar-w-2 scrollbar-track-yellow-lighter scrollbar-thumb-yellow scrollbar-thumb-rounded'>
             <div className="flex px-4 sm:px-6 items-center justify-between gap-6 sm:gap-10 mb-3 sm:mb-5">
