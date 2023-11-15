@@ -18,15 +18,21 @@ const SuccessPaymentPage = () => {
             navigate("/")
             return
         }
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
+
         const updateOrder = async () => {
             try {
                 await updateOrderPayment("Оплачено", paidOrder._id, user?.token ? user?.token : "")
                 setTimeout(() => {
                     dispatch(removePaidOrder())
-                    toast.success("Заказ успешно оплачен")
+                    toast.success("Замовлення успішно оплачено")
                 }, 5000)
             } catch (err) {
-                toast.error("Что то пошло не так!")
+                toast.error("Щось пішло не так!")
             }
         }
 
@@ -36,20 +42,20 @@ const SuccessPaymentPage = () => {
     return (
         <div className='flex flex-col gap-2 items-center justify-center h-screen w-full'>
             <h2 className='text-xl md:text-2xl lg:text-3xl text-center text-green-400'>
-                {paidOrder?.userInfo.name}, поздавляем, оплата прошла успешно!
+                {paidOrder?.userInfo.name}, вітаємо, оплата пройшла успішно!
             </h2>
             <p className='text-lg md:text-xl lg:text-2xl text-center text-green-400'>
-                Ваш заказ в скоре будет готов и доставлен к вам по адрессу
+                Ваше замовлення незабаром буде готове і доставлене до вас за адресою!
             </p>
             <Button
                 bgColor="bg-yellow"
-                text="Домой"
+                text="До кабінету"
                 textColor="text-white"
                 onClick={() => {
                     navigate("/userpage")
                     dispatch(removePaidOrder())
-                    toast.success("Заказ успешно оплачен")
                 }}
+                className="hover:bg-yellow/75"
             />
         </div>
     )

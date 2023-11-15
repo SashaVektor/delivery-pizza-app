@@ -12,7 +12,7 @@ const Steps: FC<StepsProps> = ({ active }) => {
                 1
             </div>
             <h6 className={`${active === 1 ? "text-black font-medium" : "text-gray-400"} text-sm text-center`}>
-                Корзина
+                Кошик
             </h6>
         </div>
         <div className='flex flex-col gap-1 items-center'>
@@ -21,7 +21,7 @@ const Steps: FC<StepsProps> = ({ active }) => {
                 2
             </div>
             <h6 className={`${active === 2 ? "text-black font-medium" : "text-gray-400"} text-sm text-center`}>
-                Оформление заказа
+                Створення
             </h6>
         </div>
         <div className='flex flex-col gap-1 items-center'>
@@ -30,7 +30,7 @@ const Steps: FC<StepsProps> = ({ active }) => {
                 3
             </div>
             <h6 className={`${active === 3 ? "text-black font-medium" : "text-gray-400"} text-sm text-center`}>
-                Заказ принят
+                Підтвердження
             </h6>
         </div>
     </div>

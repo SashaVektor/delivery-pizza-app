@@ -8,7 +8,7 @@ interface InfoCardProps {
 }
 
 const InfoCard: FC<InfoCardProps> = ({ bgColor, textColor, mainText, quanity }) => {
-    return <div className={`rounded-lg px-5 py-3 ${bgColor} w-[200px] shadow-md flex flex-col justify-between`}>
+    return <div className={`rounded-lg px-5 py-3 ${bgColor} w-[200px] shadow-md flex flex-col justify-between hover:scale-105 transition duration-200`}>
         <div>
             <p className={`${textColor} text-xl font-medium leading-5 mb-3`}>
                 {mainText}
@@ -16,7 +16,7 @@ const InfoCard: FC<InfoCardProps> = ({ bgColor, textColor, mainText, quanity }) 
         </div>
         <div className='flex justify-between items-center'>
             <p className={`text-lg ${textColor}`}>
-                Количество:
+                Кількість:
             </p>
             <p className={`text-xl font-bold ${textColor}`}>
                 {quanity}

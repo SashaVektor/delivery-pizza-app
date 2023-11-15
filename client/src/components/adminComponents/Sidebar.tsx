@@ -1,47 +1,50 @@
 import { Link, useLocation } from "react-router-dom"
 import adminLogo from "../../assets/admin-logo.png"
 import { CiPizza } from "react-icons/ci"
-import {MdExitToApp, MdOutlineCreate} from "react-icons/md"
+import { MdExitToApp } from "react-icons/md"
 import AdminLink from "./AdminLink"
 import { AiOutlineOrderedList } from "react-icons/ai"
+import { MdOutlineDashboardCustomize } from "react-icons/md"
 
 const Sidebar = () => {
-  const {pathname} = useLocation()
+  const { pathname } = useLocation()
   return (
-    <aside className='flex flex-col border-r border-gray-400 shadow-md w-[70px] lg:basis-1/5'>
-      <Link to="/admin"
-        className="border-b border-gray-400"
-      >
-        <img src={adminLogo}
-          alt="admin logo"
-          className="w-[150px] h-[100px] object-contain mx-auto"
-        />
-      </Link>
-      <div className='flex flex-col flex-1 gap-4 p-3'>
+    <aside className='hidden sm:flex flex-col bg-violet-300 shadow-md w-[240px] fixed top-0 left-0 h-[100dvh] overflow-y-auto scrollbar-w-2 scrollbar-track-yellow-lighter scrollbar-thumb-yellow scrollbar-thumb-rounded'>
+      <div className="border-b border-gray-400 px-2">
+        <Link to="/admin"
+          className="block w-[150px] h-[80px]"
+        >
+          <img src={adminLogo}
+            alt="admin logo"
+            className="w-full h-full"
+          />
+        </Link>
+      </div>
+      <div className='flex flex-col flex-1 gap-2'>
         <AdminLink
-          name="Все продукты"
+          name="Панель"
+          path="/admin"
+          active={pathname === "/admin"}
+          icon={<MdOutlineDashboardCustomize size={24} className="text-black" />}
+        />
+        <AdminLink
+          name="Продукти"
           path="/admin/all-products"
           active={pathname === "/admin/all-products"}
-          icon={<CiPizza size={20} className={pathname === "/admin/all-products" && "text-yellow"}/>}
+          icon={<CiPizza size={24} className="text-black" />}
         />
         <AdminLink
-          name="Создать продукт"
-          path="/admin/add-product"
-          active={pathname === "/admin/add-product"}
-          icon={<MdOutlineCreate size={20} className={pathname === "/admin/add-product" && "text-yellow"}/>}
-        />
-        <AdminLink
-          name="Все заказы"
+          name="Замовлення"
           path="/admin/view-orders"
           active={pathname === "/admin/view-orders"}
-          icon={<AiOutlineOrderedList size={20} className={pathname === "/admin/view-orders" && "text-yellow"}/>}
+          icon={<AiOutlineOrderedList size={24} className="text-black" />}
         />
       </div>
-      <p className="text-red-500 text-lg font-medium text-center leading-5 pb-3 hidden lg:block">
-        support from @sasha_veklich
-      </p>
-      <Link to="/" className="block lg:hidden mb-3">
-        <MdExitToApp size={30} className="mx-auto" />
+      <Link to="/" className="mb-3 flex items-center gap-2 px-3 py-2 hover:bg-yellow/80 transition">
+        <p className="text-base sm:text-lg">
+          До головної
+        </p>
+        <MdExitToApp size={26} />
       </Link>
     </aside>
   )

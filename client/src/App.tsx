@@ -1,9 +1,8 @@
 import Header from './components/Header'
 import Footer from './components/Footer'
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
-import SearchPage from './pages/SearchPage'
 import BasketPage from './pages/BasketPage'
 import OrderPage from './pages/OrderPage'
 import SuccessPage from './pages/SuccessPage'
@@ -17,13 +16,13 @@ import SuccessPaymentPage from './pages/SuccessPaymentPage'
 const clientId = import.meta.env.VITE_GOOGLE_API_KEY
 
 const App = () => {
-
+  const {pathname} = useLocation();
+  const isAdminPage = pathname.startsWith("/admin")
   return (
     <GoogleOAuthProvider clientId={clientId}>
-      <Header />
+      {!isAdminPage ? <Header /> : null}
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/search/:searchTerm' element={<SearchPage />} />
         <Route path='/basket' element={<BasketPage />} />
         <Route path='/order' element={<OrderPage />} />
         <Route path='/checkout-success' element={<SuccessPage />} />
@@ -32,7 +31,7 @@ const App = () => {
         <Route path='/admin/*' element={<AdminRoute><AdminPage /></AdminRoute>} />
         <Route path='*' element={<NotFound />} />
       </Routes>
-      <Footer />
+      {!isAdminPage ? <Footer /> : null}
     </GoogleOAuthProvider>
   )
 }

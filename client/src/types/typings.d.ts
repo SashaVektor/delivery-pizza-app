@@ -11,7 +11,7 @@ export interface PizzaItem {
     additiveItemsInfo?: string
 }
 
-export type CreatePizza = Omit<PizzaItem, "_id">
+export type CreatePizza = Omit<PizzaItem, "_id", "discount">
 
 export interface GoogleUser {
     image: string
@@ -51,6 +51,7 @@ export interface CurrentOrder {
         phone: string | null
         email: string | undefined
     }
+    userId: string | null
     mainOrder: BasketItems[]
     additionalOrder: AdditionalProduct[]
     totalPrice: number
@@ -59,7 +60,7 @@ export interface CurrentOrder {
     paymentMethod: "card" | "cash" | null
     payStatus: "Не оплачено" | "Оплачено"
     change: string | null
-    status: "accepted" | "delivered" | "received" | null
+    status: "Отримано" | "Прийнято" | "Доставлено" | null
 
 }
 
@@ -70,5 +71,13 @@ export interface UserOrder extends CurrentOrder {
     __v: number
 }
 
-export type statusType = "all" | "received" | "delivered" | "accepted" | null | undefined
+export type statusType = "all" | "Отримано" | "Прийнято" | "Доставлено" | null | undefined
 
+export interface EditPizzaProps {
+    id: string | undefined
+    name: string,
+    image: string,
+    descr: string,
+    price: number,
+    discount: number
+}

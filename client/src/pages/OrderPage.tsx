@@ -1,13 +1,16 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Input from "../components/Input"
 import { RootState, useAppDispatch, useAppSelector } from "../store/store"
 import Button from "../components/Button"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Steps from "../components/Steps"
 import { CurrentOrder } from "../types/typings"
-import { createOrder } from "../store/slices/orderSlice"
 import { removeAllItems } from "../store/slices/basketSlice"
 import { toast } from "react-hot-toast"
+import { createOrder } from "../utils"
+import { FaSpinner } from "react-icons/fa"
+import { useGetUserOrdersQuery } from "../store/services/products"
+
 const OrderPage = () => {
     const currentOrder = useAppSelector((state: RootState) => state.order.currentOrder)
     const user = useAppSelector((state: RootState) => state.auth.googleUser)
@@ -17,6 +20,9 @@ const OrderPage = () => {
     const [address, setAddress] = useState<string>(currentOrder?.userAddress ? currentOrder?.userAddress : "")
     const [payMethod, setPayMethod] = useState<"cash" | "card">("cash")
     const [change, setChange] = useState<string>("")
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const { refetch } = useGetUserOrdersQuery(user?._id ? user._id : "")
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch();
@@ -24,7 +30,7 @@ const OrderPage = () => {
 
     let totalPrice: number;
 
-    if(payMethod === "card") {
+    if (payMethod === "card") {
         totalPrice = currentOrder?.totalPrice ? currentOrder.totalPrice : 0
     } else {
         totalPrice = currentOrder?.totalPrice ? currentOrder.totalPrice + 45 : 0
@@ -36,218 +42,234 @@ const OrderPage = () => {
         && currentOrder?.mainOrder && (payMethod === "cash" ? change : true)
 
     const validChange = payMethod === "cash"
-        ? Number(change) > (currentOrder?.totalPrice ? currentOrder?.totalPrice : 0)
+        ? Number(change) >= (currentOrder?.totalPrice ? currentOrder.totalPrice + 45 : 0)
         : true
 
 
     const createUserOrder = async () => {
-        try {
-            const newOrder: CurrentOrder = {
-                userInfo: {
-                    name: userName,
-                    phone: phoneNumber,
-                    email: userEmail,
-                },
-                comments: currentOrder?.comments || "",
-                additionalOrder: currentOrder?.additionalOrder || [],
-                mainOrder: currentOrder?.mainOrder || [],
-                paymentMethod: payMethod,
-                payStatus: "Не оплачено",
-                totalPrice,
-                userAddress: currentOrder?.userAddress || "",
-                change: change || "",
-                status: "received",
-            };
+        const newOrder: CurrentOrder = {
+            userInfo: {
+                name: userName,
+                phone: phoneNumber,
+                email: userEmail,
+            },
+            userId: user?._id ? user._id : null,
+            comments: currentOrder?.comments || "",
+            additionalOrder: currentOrder?.additionalOrder || [],
+            mainOrder: currentOrder?.mainOrder || [],
+            paymentMethod: payMethod,
+            payStatus: "Не оплачено",
+            totalPrice,
+            userAddress: currentOrder?.userAddress || "",
+            change: change || "",
+            status: "Отримано",
+        };
 
-            await dispatch(createOrder(newOrder));
-            dispatch(removeAllItems());
-            toast.success("Ваш ордер успішно створено!");
-            navigate("/checkout-success");
+        try {
+            setIsLoading(true)
+            const res = await createOrder(newOrder);
+            if (res?.message === "Замовлення успішно створено!") {
+                dispatch(removeAllItems());
+                toast.success("Ваш ордер успішно створено!");
+                navigate("/checkout-success");
+                refetch();
+            } else {
+                toast.error("Щось пішло не так!")
+            }
         } catch (err) {
-            toast.error("Что то пошло не так!")
+            toast.error("Щось пішло не так!")
+        } finally {
+            setIsLoading(false)
         }
     }
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
+    }, [])
+
     return (
-        <>
-            <h4 className="text-green-400 text-xl md:text-2xl lg:text-3xl text-center pt-[130px]">
-                При оплате картой доставка бесплатная!
+        <div className="mx-auto w-full max-w-7xl px-2 sm:px-4 pt-[65px] sm:pt-[90px] pb-5">
+            <h4 className="text-green-400 text-xl md:text-2xl lg:text-3xl mb-4 md:mb-8">
+                При оплаті карткою ви отримаєте безкоштовну доставку!
             </h4>
-            <p className="text-green-400 text-base md:text-lg lg:text-xl text-center mb-5 md:mb-10">
-                Оплата картой осуществляеться в долларах по курсу 38 гривен
-            </p>
-            <div className="max-w-7xl mx-auto px-4 pb-4 flex flex-col-reverse md:flex-row items-center md:items-start justify-between gap-10">
-                <div className="max-w-2xl w-full">
-                    <div className="flex flex-col xl:flex-row justify-between gap-5 items-center mb-8">
-                        <h3 className="text-xl md:text-2xl lg:text-3xl text-yellow font-bold">
-                            Заказ на доставку
+            <div className="flex flex-col-reverse md:flex-row items-center md:items-start gap-5 md:gap-10">
+                <div className="max-w-3xl w-full">
+                    <div className="flex flex-col xl:flex-row justify-between gap-5 mb-3 lg:mb-6">
+                        <h3 className="text-2xl lg:text-3xl text-yellow font-bold">
+                            Створення замовлення
                         </h3>
-                        <Steps
-                            active={2}
-                        />
+                        <div className="hidden xl:block">
+                            <Steps
+                                active={2}
+                            />
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-4 ">
-                        <div className="flex items-center justify-between gap-2">
-                            <h6 className="text-lg text-gray-500 hidden md:block">
-                                Имя
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-1">
+                            <h6 className="text-base md:text-lg">
+                                Ваше ім'я
                             </h6>
                             <Input
-                                placeholder="Ваше имя"
+                                placeholder="Введіть ваще ім'я"
                                 input={userName}
                                 setInput={setUserName}
                                 type="text"
-                                className={`w-full max-w-lg ${userName ? "bg-gray-300" : ""}`}
+                                className={`w-full ${userName ? "bg-gray-50" : ""}`}
                             />
                         </div>
-                        <div className="flex items-center justify-between gap-2">
-                            <h6 className="text-lg text-gray-500 hidden md:block">
-                                Почта
+                        <div className="flex flex-col gap-1">
+                            <h6 className="text-base md:text-lg">
+                                Ваша пошта
                             </h6>
                             <Input
-                                placeholder="Ваша почта"
+                                placeholder="Введіть вашу пошту"
                                 input={userEmail}
                                 setInput={setUserEmail}
                                 type="text"
-                                className={`w-full max-w-lg ${userEmail ? "bg-gray-300" : ""}`}
+                                className={`w-full ${userEmail ? "bg-gray-50" : ""}`}
                             />
                         </div>
-                        <div className="flex items-center justify-between gap-2">
-                            <h6 className="text-lg text-gray-500 hidden md:block">
-                                Номер телефона
+                        <div className="flex flex-col gap-1">
+                            <h6 className="text-base md:text-lg">
+                                Номер телефону
                             </h6>
                             <Input
-                                placeholder="Номер телефона"
+                                placeholder="Введіть ваш номер телефону"
                                 input={phoneNumber}
                                 setInput={setPhoneNumber}
                                 type="text"
-                                className={`w-full max-w-lg ${phoneNumber ? "bg-gray-300" : ""}`}
+                                className={`w-full ${phoneNumber ? "bg-gray-50" : ""}`}
                             />
                         </div>
-                        <div className="flex items-center justify-between gap-2">
-                            <h6 className="text-lg  text-gray-500 hidden md:block">
-                                Ваш Адресс
+                        <div className="flex flex-col gap-1">
+                            <h6 className="text-base md:text-lg">
+                                Ваш адреса
                             </h6>
                             <Input
-                                placeholder="Ваш Адресс"
+                                placeholder="Введіть вашу адресу"
                                 input={address}
                                 setInput={setAddress}
                                 type="text"
-                                className={`w-full max-w-lg ${address ? "bg-gray-300" : ""}`}
+                                className={`w-full ${address ? "bg-gray-50" : ""}`}
                             />
                         </div>
-                        <div className="flex justify-between gap-2">
-                            <h6 className="text-lg text-gray-500">
-                                Время доставки
-                            </h6>
-                            <p className="text-black text-lg">40-45мин.</p>
-                        </div>
-                        {!validOrder && <p className="text-red-500 text-base font-bold text-center">
-                            Заполните все поля*
-                        </p>}
-                        <div className="w-full bg-gray-200 py-4 px-4 md:py-10 md:px-8 rounded-lg">
-                            {!user && <p className="text-red-700 text-base sm:text-lg leading-4">
-                                Так как вы не вошли в свой аккаунт, то для вас доступена оплата только наличными при получении!
+                        <h6 className="text-base md:text-lg">
+                            Час доставки - <span className="font-semibold">40-45хв.</span>
+                        </h6>
+                        <div className="w-full px-3 py-2 md:py-4 md:px-6 rounded-lg border border-gray-300">
+                            {!user && <p className="text-red-500 text-base leading-5 sm:text-lg sm:leading-6">
+                                Ви не можете використати оплату карткою через те, що ви не ввійшли до свого кабінету!
                             </p>}
-                            <h4 className="text-red-500 font-bold text-lg md:text-xl lg:text-2xl mb-4 md:mb-8">
-                                Способы оплаты
+                            <h4 className="text-yellow font-bold text-lg md:text-xl lg:text-2xl mb-2 md:mb-4">
+                                Способи оплати замовлення
                             </h4>
-                            <div className="flex gap-10 items-center mb-5">
+                            <div className="flex gap-3 items-center mb-4">
                                 <Button
-                                    bgColor={payMethod === "card" ? "bg-gray-400" : "bg-red-500"}
-                                    text="Наличные"
+                                    bgColor={payMethod === "card" ? "bg-gray-200" : "bg-yellow"}
+                                    text="Готівкою"
                                     textColor="text-black"
                                     onClick={() => setPayMethod("cash")}
+                                    className="hover:bg-yellow"
 
                                 />
                                 {user && <Button
-                                    bgColor={payMethod === "cash" ? "bg-gray-400" : "bg-red-500"}
-                                    text="Карта"
+                                    bgColor={payMethod === "cash" ? "bg-gray-200" : "bg-yellow"}
+                                    text="Картка"
                                     textColor="text-black"
                                     onClick={() => setPayMethod("card")}
+                                    className="hover:bg-yellow"
                                 />}
                             </div>
-                            {payMethod === "cash" && (<div className="flex flex-col xl:flex-row xl:items-center gap-2 md:gap-6">
-                                <p className="text-base text-gray-500">
-                                    С какой суммы подготовить сдачу?
+                            {payMethod === "cash" && (<div className="flex flex-col gap-2">
+                                <p className=" text-gray-500">
+                                    З якої суми бажаєте отримати решту <span className="text-black">
+                                        (число повинно бути не менше ніж вартість замовлення)
+                                    </span>?
                                 </p>
                                 <Input
-                                    placeholder="Сумма"
+                                    placeholder="Сума"
                                     type="text"
                                     input={change}
                                     setInput={setChange}
+                                    className="w-1/2"
                                 />
-                                {!validChange && <p className="text-red-500 text-base">
-                                    Сумма должна быть больше итогового заказа!
-                                </p>}
                             </div>)
                             }
-                            {payMethod === "card" && <p className="text-green-400 text-base">
-                                Чтоб оплатить заказ картой, после оформление перейдите во вкладку "Мой профиль" и оплатите заказ
+                            {payMethod === "card" && <p className="text-green-400">
+                                Щоб оплатити замовлення картою, після оформлення перейдіть у вкладку "Мій профіль" і оплатіть замовлення.
                             </p>}
                         </div>
-                        <div className="flex items-center justify-between">
-                            <button onClick={() => navigate("/basket")} className="text-gray-500 text-base md:text-lg font-semibold">
+                        {!isLoading ? <div className="flex items-center justify-between">
+                            <Link to="/basket" className="text-gray-400 text-base md:text-lg block px-2 py-1 rounded-md hover:bg-gray-50 transition">
                                 Назад в корзину
-                            </button>
+                            </Link>
                             <Button
                                 bgColor="bg-yellow"
-                                text="Оформить заказ"
+                                text="Створити замовлення"
                                 textColor="text-black"
                                 onClick={createUserOrder}
                                 disabled={!validOrder || !validChange}
+                                className="hover:bg-yellow/75"
                             />
-                        </div>
+                        </div> : (
+                            <div className="flex items-center justify-center">
+                                <FaSpinner size={36} className="animate-spin" />
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="bg-white w-[290px] sm:min-w-[360px] p-7 shadow-md rounded-lg max-h-[550px]">
-                    <h4 className="text-yellow text-lg text-bold mb-6">
-                        Состав заказа
+                <div className="bg-white px-4 py-3 pr-2 min-w-[350px] xl:min-w-[500px] drop-shadow-sm rounded-xl max-h-[500px] border border-gray-300">
+                    <h4 className="text-yellow text-lg text-bold mb-6 uppercase">
+                        Замовлення
                     </h4>
-                    <div className="flex flex-col gap-5 mb-16 overflow-x-auto max-h-72 scrollbar-w-2 scrollbar-track-yellow-lighter scrollbar-thumb-yellow scrollbar-thumb-rounded pr-4">
+                    <div className="flex flex-col gap-5 mb-5 overflow-x-auto max-h-32 sm:max-h-60 lg:max-h-80 scrollbar-w-2 scrollbar-track-yellow-lighter scrollbar-thumb-yellow scrollbar-thumb-rounded">
                         {currentOrder?.mainOrder.map((item) => (
-                            <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-300" key={item._id}>
-                                <p className="text-base sm:text-lg font-bold text-gray-500 whitespace-nowrap">{item.quantity} x</p>
-                                <div className="max-w-[220px]">
-                                    <h6 className="text-black text-sm font-bold text-center">
-                                        {item.name}
+                            <div className="flex items-center justify-between gap-2 pb-2 pr-2 border-b border-gray-300" key={item._id}>
+                                <p className="font-medium whitespace-nowrap">{item.quantity}x</p>
+                                <div>
+                                    <h6 className="font-medium text-center">
+                                        {item.name.length > 25 ? `${item.name.slice(0, 23)}...` : item.name}
                                     </h6>
                                 </div>
-                                <p className="text-black text-base font-bold leading-4 text-right">
+                                <p className="font-medium sm:font-bold leading-4 text-right whitespace-nowrap">
                                     {item.price * item.quantity} грн
                                 </p>
                             </div>
                         ))}
                         {currentOrder?.additionalOrder.map((item) => (
-                            <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-300" key={item._id}>
-                                <p className="text-base sm:text-lg font-bold text-gray-500 whitespace-nowrap">{item.quantity} x</p>
-                                <div className="max-w-[220px]">
-                                    <h6 className="text-black text-sm font-bold text-center">
-                                        {item.name}
+                            <div className="flex items-center justify-between gap-2 pb-2 pr-2 border-b border-gray-300" key={item._id}>
+                                <p className="font-medium whitespace-nowrap">{item.quantity}x</p>
+                                <div>
+                                    <h6 className="font-medium text-center">
+                                        {item.name.length > 25 ? `${item.name.slice(0, 23)}...` : item.name}
                                     </h6>
                                 </div>
-                                <p className="text-black text-base font-bold leading-4 text-right">
+                                <p className="font-medium sm:font-bold leading-4 text-right whitespace-nowrap">
                                     {item.price * item.quantity} грн
                                 </p>
                             </div>
                         ))}
                     </div>
-                    <div className="flex justify-between">
-                        <h5 className="text-gray-400 text-base">Сумма заказа</h5>
-                        <p className="text-black text-lg font-bold">{currentOrder?.totalPrice} грн.</p>
+                    <div className="hidden sm:flex justify-between">
+                        <h5>Сума</h5>
+                        <p className="sm:text-lg font-medium sm:font-bold">{currentOrder?.totalPrice} грн.</p>
                     </div>
-                    <div className="flex justify-between">
-                        <h5 className="text-gray-400 text-base">Доставка</h5>
-                        <p className="text-black text-lg font-bold">
-                            {payMethod === "card" ? "0 грн.": "45 грн."}
+                    <div className="hidden sm:flex justify-between">
+                        <h5>Доставка</h5>
+                        <p className="sm:text-lg font-medium sm:font-bold">
+                            {payMethod === "card" ? "0 грн." : "45 грн."}
                         </p>
                     </div>
                     <div className="flex justify-between">
-                        <h5 className="text-gray-400 text-base">Итоговая сумма</h5>
-                        <p className="text-black text-lg font-bold">{totalPrice} грн.</p>
+                        <h5>До сплати</h5>
+                        <p className="sm:text-lg font-medium sm:font-bold">{totalPrice} грн.</p>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

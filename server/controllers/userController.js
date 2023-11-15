@@ -2,6 +2,7 @@ import User from "../models/userModel.js"
 import expressAsyncHandler from "express-async-handler"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils.js"
+import generatePassword from "generate-password"
 
 export const signIn = expressAsyncHandler(async (req, res) => {
     try {
@@ -73,10 +74,18 @@ export const googleUserSignIn = expressAsyncHandler(async (req, res) => {
         const saltRounds = 10;
         const salt = bcrypt.genSaltSync(saltRounds);
 
+        const password = generatePassword.generate({
+            length: 16, 
+            numbers: true, 
+            symbols: true,
+            uppercase: true,
+            excludeSimilarCharacters: true,
+          });
+
         const newUser = new User({
             name: req.body.name,
             email: req.body.email,
-            password: bcrypt.hashSync("Some random phrase", salt),
+            password: bcrypt.hashSync(password, salt),
         })
 
         const user = await newUser.save();

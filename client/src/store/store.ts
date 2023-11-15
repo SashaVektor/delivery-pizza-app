@@ -5,13 +5,19 @@ import authSlice from './slices/authSlice'
 import basketSlice from './slices/basketSlice'
 import orderSlice from './slices/orderSlice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import productSlice from './slices/productSlice'
+import modalSlice from './slices/modalSlice'
+import paginateSlice from './slices/paginateSlice'
 
 export const store = configureStore({
   reducer: {
     [productsApi.reducerPath]: productsApi.reducer,
     auth: authSlice,
     basket: basketSlice,
-    order: orderSlice
+    order: orderSlice,
+    product: productSlice,
+    modal: modalSlice,
+    paginate: paginateSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

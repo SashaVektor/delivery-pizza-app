@@ -1,6 +1,6 @@
 import { Options } from "../../components/adminComponents/SelectStatus";
 
-export const baseUrl = import.meta.env.VITE_BASE_URL || "http://localhost:8888";
+export const baseUrl = import.meta.env.VITE_BASE_UR || "http://localhost:8888";
 
 export const paymentOptions: Options[] = [
     {
@@ -15,15 +15,15 @@ export const paymentOptions: Options[] = [
 
 export const statusOptions: Options[] = [
     {
-        value: "received",
-        text: "Получено"
+        value: "Отримано",
+        text: "Отримано"
     },
     {
-        value: "accepted",
-        text: "Принято"
+        value: "Прийнято",
+        text: "Прийнято"
     },
     {
-        value: "delivered",
+        value: "Доставлено",
         text: "Доставлено"
     },
 ]

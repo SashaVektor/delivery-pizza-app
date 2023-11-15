@@ -6,9 +6,9 @@ interface OrderInfoProps {
 }
 
 const OrderInfo: FC<OrderInfoProps> = ({ text, info }) => {
-    return <div className="flex flex-col sm:flex-row gap-0 sm:gap-2 items-center">
-        <p className="font-bold text-center sm:text-left">{text}</p>
-        <p className="text-center sm:text-left">{info}</p>
+    return <div className="flex flex-col">
+        <p className="font-bold text-base md:text-lg leading-4 md:leading-5">{text}</p>
+        <p className="text-base md:text-lg leading-4 md:leading-5">{info}</p>
     </div>
 }
 

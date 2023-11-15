@@ -1,105 +1,94 @@
-import { Link } from "react-router-dom"
-import logo from "../assets/logo.png"
+import { Link, useLocation } from "react-router-dom"
 import FooterCard from "./FooterCard"
-import {FaViber, FaInstagram, FaTelegram, FaFacebook, FaYoutube,} from "react-icons/fa"
-import {BsFillTelephoneFill} from "react-icons/bs"
+import { FaViber, FaInstagram, FaTelegram, FaFacebook, FaYoutube, } from "react-icons/fa"
+import { BsFillTelephoneFill } from "react-icons/bs"
 import Button from "./Button"
 
 
 const Footer = () => {
+  const {pathname} = useLocation();
+
   return (
-    <footer className="bg-white p-4 lg:p-12 py-10 border-t border-gray-400">
+    <footer className={`${pathname === "/" ? "pb-20 sm:pb-4" : ""} bg-white p-4 lg:p-12 lg:py-10 border-t border-gray-400`}>
       <div className="max-w-7xl w-full flex flex-col sm:flex-row mx-auto px-4 justify-center gap-5 lg:gap-32">
         <div>
-          <Link to="/" className="mb-8 w-[90px] h-[70px] block">
-            <img src={logo} alt="log"
+          <Link to="/" className="mb-3 w-[90px] h-[90px] block">
+            <img
+              src="https://res.cloudinary.com/dxvrhfhtl/image/upload/v1698851907/jm8xyhersfvf6z4oczlc.png"
+              alt="logo"
               className="w-full h-full object-contain"
             />
           </Link>
-          <div className="flex items-center gap-5 mb-6">
-            <Link to="/" className="text-black text-lg font-medium transition-all duration-150 hover:text-black/50">
-              Калорийность и состав
-            </Link>
-            <Link to="/" className="text-black text-lg font-medium transition-all duration-150 hover:text-black/50">
-              Правовая информация
-            </Link>
-          </div>
-          <h4 className="text-black text-md font-bold mb-4">
-            Мы в соцсетях
+          <h4 className="text-black text-lg font-bold mb-2">
+            Ми в соцмережах
           </h4>
-          <div className="flex gap-10 mb-10">
-            <div className="flex flex-col gap-4">
-              <a href="https://www.youtube.com/" target="_blank" referrerPolicy="no-referrer"
-                className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
-                Youtube
-              </a>
-              <a href="https://www.instagram.com/" target="_blank" referrerPolicy="no-referrer"
-                className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
-                Instagram
-              </a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <a href="https://www.facebook.com/" target="_blank" referrerPolicy="no-referrer"
-                className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
-                Facebook
-              </a>
-              <a href="https://www.telegram.com/" target="_blank" referrerPolicy="no-referrer"
-                className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
-                Telegram
-              </a>
-            </div>
+          <div className="flex gap-2 md:gap-5 mb-3 md:mb-5 flex-wrap max-w-xs">
+            <a href="https://www.youtube.com/" target="_blank" referrerPolicy="no-referrer"
+              className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
+              Youtube
+            </a>
+            <a href="https://www.instagram.com/" target="_blank" referrerPolicy="no-referrer"
+              className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/" target="_blank" referrerPolicy="no-referrer"
+              className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
+              Facebook
+            </a>
+            <a href="https://www.telegram.com/" target="_blank" referrerPolicy="no-referrer"
+              className="text-gray-400 text-sm transition-all duration-200 hover:text-black">
+              Telegram
+            </a>
             <p
               className="text-gray-400 text-sm">
-              Киев, улица Проспект победы 31а
+              Київ, вулиця Перемоги 31а
             </p>
           </div>
           <p className="text-black text-md font-medium">
-          Avektor Все права защищены © 2023
+            sasha_veklich Усі права захищені © 2023
           </p>
         </div>
         <div>
           <h4 className="text-black text-lg mb-5 font-bold">
-          Остались вопросы? А мы всегда на связи:
+            Залишилися питання? А ми завжди на зв'язку:
           </h4>
-          <div className="grid grid-cols-2 lg:grid-cols-4 grid-rows-2 gap-4 mb-10">
-            <FooterCard 
-            icon={<BsFillTelephoneFill size={22}/>}
-            path="/"
+          <div className="grid grid-cols-2 lg:grid-cols-4 grid-rows-2 gap-2 md:gap-4 mb-4 md:mb-10">
+            <FooterCard
+              icon={<BsFillTelephoneFill size={22} />}
+              path="/"
             />
-            <FooterCard 
-            icon={<FaFacebook size={22}/>}
-            path="/"
+            <FooterCard
+              icon={<FaFacebook size={22} />}
+              path="/"
             />
-            <FooterCard 
-            icon={<FaInstagram size={22}/>}
-            path="/"
+            <FooterCard
+              icon={<FaInstagram size={22} />}
+              path="/"
             />
-            <FooterCard 
-            icon={<FaTelegram size={22}/>}
-            path="/"
+            <FooterCard
+              icon={<FaTelegram size={22} />}
+              path="/"
             />
-            <FooterCard 
-            icon={<FaViber size={22}/>}
-            path="/"
+            <FooterCard
+              icon={<FaViber size={22} />}
+              path="/"
             />
-            <FooterCard 
-            icon={<FaYoutube size={22}/>}
-            path="/"
+            <FooterCard
+              icon={<FaYoutube size={22} />}
+              path="/"
             />
-            <Button 
-            bgColor="border border-gray-300"
-            text="Связь с нами"
-            width="216px"
-            height="52px"
-            textColor="text-black"
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onClick={() => {}}
-            className="col-span-2"
+            <Button
+              bgColor="border border-gray-300"
+              text="Зв'язок з нами"
+              width="216px"
+              height="52px"
+              textColor="text-black"
+              className="col-span-2 transition hover:scale-110"
             />
           </div>
           <a
             href="tel:380950083933"
-            className="text-xl text-yellow"
+            className="block w-fit text-lg text-yellow transition hover:scale-110"
           >
             +380950083933
           </a>

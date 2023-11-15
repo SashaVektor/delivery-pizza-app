@@ -5,15 +5,22 @@ import { useEffect } from "react";
 
 const SuccessPage = () => {
     const navigate = useNavigate();
+    
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             navigate("/userpage");
           }, 7000);
+
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
         
           return () => {
             clearTimeout(timeoutId);
           };
     }, [navigate])
+
     return (
         <div className="flex flex-col h-[80vh] items-center justify-center max-w-4xl mx-auto w-full">
             <Confetti
@@ -32,20 +39,21 @@ const SuccessPage = () => {
             />
             <div className="flex flex-col gap-5 items-center text-center">
                 <h2 className="text-yellow text-4xl font-bold">
-                    Поздравляем!
+                    Вітаємо!
                 </h2>
                 <h4 className="text-red-500 text-2xl font-semibold">
-                    Ваш заказ успешно создан!
+                    Ваше замовлення успішно створено та надіслано до нас!
                 </h4>
                 <h6 className="text-red-500 text-xl font-medium">
-                    Наш ресторан скоро свяжеться с вами для обсуждения дополнительных деталей! <br />
-                    Ваш заказ будет доставлен в течении 50 мин.
+                    Ми незабаром з вами зв'яжемося для підтвердження! <br />
+                    Ваше замовлення буде доставлено приблизно через 45хв.
                 </h6>
                 <Button 
                 bgColor="bg-yellow"
-                text="Домой"
+                text="На головну"
                 textColor="text-black"
                 onClick={() => navigate("/")}
+                className="hover:bg-yellow/75"
                 />
             </div>
         </div>

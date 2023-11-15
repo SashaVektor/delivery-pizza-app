@@ -18,8 +18,14 @@ export const productsApi = createApi({
         getOrderById: builder.query<UserOrder, string | undefined>({
             query: (id) => `orders/${id}`,
         }),
+        getUserOrders: builder.query<UserOrder[], string>({
+            query: (userId) => `orders/users/userOrders?userId=${userId}`,
+        }),
     }),
 })
 
-export const { useGetProductsQuery, useGetOrdersQuery,
-    useGetAllUsersQuery, useGetOrderByIdQuery } = productsApi
+export const { 
+    useGetProductsQuery, useGetOrdersQuery,
+    useGetAllUsersQuery, useGetOrderByIdQuery,
+    useGetUserOrdersQuery
+} = productsApi
